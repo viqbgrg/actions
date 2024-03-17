@@ -6,10 +6,10 @@ jobs:
     name: My first job
     runs-on: ubuntu-latest
     steps:
-      # - uses: actions/checkout@v4
-      #   with:
-      #     repository: MetaCubeX/mihomo
-      #     ref: Alpha
-      #     fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          repository: MetaCubeX/mihomo
+          ref: Alpha
+          fetch-depth: 1
       
       - uses: MetaCubeX/mihomo/.github/workflows/build.yml@Alpha
