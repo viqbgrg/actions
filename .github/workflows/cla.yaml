@@ -12,4 +12,4 @@ jobs:
           ref: Alpha
           fetch-depth: 1
   build:
-    - uses: MetaCubeX/mihomo/.github/workflows/build.yml@Alpha
+    uses: MetaCubeX/mihomo/.github/workflows/build.yml@Alpha
