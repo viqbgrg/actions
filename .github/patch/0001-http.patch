@@ -1,0 +1,88 @@
+From eafd42a28ed6796624c6fead3b8b245c04520c98 Mon Sep 17 00:00:00 2001
+From: viqbgrg <viqbgrg@gmail.com>
+Date: Mon, 18 Mar 2024 07:12:54 +0800
+Subject: [PATCH] http
+
+---
+ adapter/outbound/http.go | 47 +++++++++++++++++++++++++---------------
+ 1 file changed, 30 insertions(+), 17 deletions(-)
+
+diff --git a/adapter/outbound/http.go b/adapter/outbound/http.go
+index b837e49a..ad221c59 100644
+--- a/adapter/outbound/http.go
++++ b/adapter/outbound/http.go
+@@ -12,6 +12,7 @@ import (
+ 	"net"
+ 	"net/http"
+ 	"strconv"
++	"strings"
+ 
+ 	N "github.com/metacubex/mihomo/common/net"
+ 	"github.com/metacubex/mihomo/component/ca"
+@@ -40,6 +41,11 @@ type HttpOption struct {
+ 	SkipCertVerify bool              `proxy:"skip-cert-verify,omitempty"`
+ 	Fingerprint    string            `proxy:"fingerprint,omitempty"`
+ 	Headers        map[string]string `proxy:"headers,omitempty"`
++	Tunnel         TunnelOption      `proxy:"tunnel,omitempty"`
++}
++
++type TunnelOption struct {
++	First string `proxy:"first,omitempty"`
+ }
+ 
+ // StreamConnContext implements C.ProxyAdapter
+@@ -97,27 +103,34 @@ func (h *Http) SupportWithDialer() C.NetWork {
+ 
+ func (h *Http) shakeHand(metadata *C.Metadata, rw io.ReadWriter) error {
+ 	addr := metadata.RemoteAddress()
+-	HeaderString := "CONNECT " + addr + " HTTP/1.1\r\n"
+-	tempHeaders := map[string]string{
+-		"Host":             addr,
+-		"User-Agent":       "Go-http-client/1.1",
+-		"Proxy-Connection": "Keep-Alive",
+-	}
++	HeaderString := ""
++	if h.option.Tunnel.First != "" {
++		HeaderString = h.option.Tunnel.First
++		HeaderString = strings.ReplaceAll(HeaderString, "[M]", "CONNECT")
++		HeaderString = strings.ReplaceAll(HeaderString, "[H]", addr)
++	} else {
++		HeaderString = "CONNECT " + addr + " HTTP/1.1\r\n"
++		tempHeaders := map[string]string{
++			"Host":             addr,
++			"User-Agent":       "Go-http-client/1.1",
++			"Proxy-Connection": "Keep-Alive",
++		}
+ 
+-	for key, value := range h.option.Headers {
+-		tempHeaders[key] = value
+-	}
++		for key, value := range h.option.Headers {
++			tempHeaders[key] = value
++		}
+ 
+-	if h.user != "" && h.pass != "" {
+-		auth := h.user + ":" + h.pass
+-		tempHeaders["Proxy-Authorization"] = "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
+-	}
++		if h.user != "" && h.pass != "" {
++			auth := h.user + ":" + h.pass
++			tempHeaders["Proxy-Authorization"] = "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
++		}
+ 
+-	for key, value := range tempHeaders {
+-		HeaderString += key + ": " + value + "\r\n"
+-	}
++		for key, value := range tempHeaders {
++			HeaderString += key + ": " + value + "\r\n"
++		}
+ 
+-	HeaderString += "\r\n"
++		HeaderString += "\r\n"
++	}
+ 
+ 	_, err := rw.Write([]byte(HeaderString))
+ 
+-- 
+2.44.0
+
