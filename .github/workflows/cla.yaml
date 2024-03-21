@@ -25,6 +25,9 @@ jobs:
           repository: MetaCubeX/mihomo
           ref: Alpha
           fetch-depth: 1
+      
+      - name: 文件目录
+        run: pwd
       - name: patch file
         run: git apply ./patchs/.github/patch/0001-http.patch
       - name: Set up Go
