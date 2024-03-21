@@ -22,3 +22,70 @@ jobs:
         run: |
           cd core/src/foss/golang/clash
           git apply $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.20"
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Signing properties
+        env:
+          PLAY_STORE_UPLOAD_KEY: ${{ secrets.PLAY_STORE_UPLOAD_KEY }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > release.keystore
+          touch signing.properties
+          echo keystore.password="$SIGNING_STORE_PASSWORD" > signing.properties
+          echo key.alias="$SIGNING_KEY_ALIAS" >> signing.properties
+          echo key.password="$SIGNING_KEY_PASSWORD" >> signing.properties
+            
+          echo "cat signing.properties"
+          cat signing.properties
+
+      - name: Pre-release Build
+        if: success()
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: --no-daemon app:assembleMeta-AlphaRelease
+
+      # Delete old Prerelease-alpha
+      - uses: dev-drprasad/delete-tag-and-release@v1.0
+        with:
+          tag_name: Prerelease-alpha
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_release: true
+
+      - name: Tag Repo
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: Prerelease-alpha
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Alpha
+        uses: softprops/action-gh-release@v1
+        if: ${{  success() }}
+        with:
+          tag_name: Prerelease-alpha
+          files: app/build/outputs/apk/meta-alpha/release/*
+          prerelease: true
+          generate_release_notes: true
+
+      - name: Release Changelog Builder
+        uses: mikepenz/release-changelog-builder-action@v4.1.1
