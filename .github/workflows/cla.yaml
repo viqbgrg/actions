@@ -22,9 +22,11 @@ jobs:
           fetch-depth: 1
       
       - name: download project
-        uses: actions/download-artifact@v4
+        uses: actions/checkout@v4
         with:
           path: patchs
+          fetch-depth: 1
+          
       - name: 文件目录
         run: ls -l
       - name: patch file
