@@ -26,7 +26,7 @@ jobs:
           ref: Alpha
           fetch-depth: 1
       - name: patch file
-        run: git apply patchs/.github/patch/0001-http.patch
+        run: git apply ./patchs/.github/patch/0001-http.patch
       - name: Set up Go
         if: ${{ matrix.jobs.goversion == '' && matrix.jobs.goarch != 'loong64' }}
         uses: actions/setup-go@v5
