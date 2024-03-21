@@ -26,8 +26,6 @@ jobs:
         with:
           path: patchs
           
-      - name: 文件目录
-        run: ls -l
       - name: patch file
         run: git apply ./patchs/.github/patch/0001-http.patch
       - name: Set up Go
