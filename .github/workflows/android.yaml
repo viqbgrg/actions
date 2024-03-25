@@ -73,12 +73,12 @@ jobs:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     delete_release: true
 
-      - name: Tag Repo
-        uses: richardsimko/update-tag@v1
-        with:
-          tag_name: Prerelease-alpha
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Tag Repo
+      #   uses: richardsimko/update-tag@v1
+      #   with:
+      #     tag_name: Prerelease-alpha
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Alpha
         uses: softprops/action-gh-release@v1
