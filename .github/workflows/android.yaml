@@ -12,6 +12,7 @@ jobs:
           repository: MetaCubeX/ClashMetaForAndroid
           ref: main
           fetch-depth: 1
+          fetch-tags: 'v2.10.1'
           submodules: true
       - name: Checkout Repository
         uses: actions/checkout@v4
