@@ -23,7 +23,7 @@ jobs:
         run: |
           ls -l core/src/foss/golang/clash
           # cd core/src/foss/golang/clash
-          git apply directory=core/src/foss/golang/clash $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
+          git apply directory=$GITHUB_WORKSPACE/core/src/foss/golang/clash $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
