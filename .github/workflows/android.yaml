@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 1
       - name: patch file
         run: |
-          ls -l
+          ls -l core/src/foss/golang/clash
           # cd core/src/foss/golang/clash
           git apply directory=core/src/foss/golang/clash $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
       - name: Setup Java
