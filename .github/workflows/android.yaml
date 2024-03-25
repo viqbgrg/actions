@@ -11,18 +11,18 @@ jobs:
         with:
           repository: MetaCubeX/ClashMetaForAndroid
           fetch-depth: 1
-          # submodules: true
-      - name: Checkout submodules
-        run: git submodule update --init --recursive --remote --force
+          submodules: true
+      # - name: Checkout submodules
+      #   run: git submodule update --init --recursive --remote --force
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           path: patchs
           fetch-depth: 1
-      # - name: patch file
-      #   run: |
-      #     cd core/src/foss/golang/clash
-      #     git apply $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
+      - name: patch file
+        run: |
+          cd core/src/foss/golang/clash
+          git apply $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
