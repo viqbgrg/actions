@@ -11,7 +11,9 @@ jobs:
         with:
           repository: MetaCubeX/ClashMetaForAndroid
           fetch-depth: 1
-          submodules: true
+          # submodules: true
+      - name: Checkout submodules
+        run: git submodule update --init --recursive --remote --force
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
