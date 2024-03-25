@@ -10,7 +10,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: MetaCubeX/ClashMetaForAndroid
-          ref: 2832c9ee4c7efaba2137f59b58cfb26c00715207
           fetch-depth: 1
           submodules: true
       - name: Checkout Repository
@@ -18,10 +17,10 @@ jobs:
         with:
           path: patchs
           fetch-depth: 1
-      - name: patch file
-        run: |
-          cd core/src/foss/golang/clash
-          git apply $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
+      # - name: patch file
+      #   run: |
+      #     cd core/src/foss/golang/clash
+      #     git apply $GITHUB_WORKSPACE/patchs/.github/patch/0001-http.patch
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
