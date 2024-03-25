@@ -67,11 +67,11 @@ jobs:
           arguments: --no-daemon app:assembleMeta-AlphaRelease
 
       # Delete old Prerelease-alpha
-      - uses: dev-drprasad/delete-tag-and-release@v1.0
-        with:
-          tag_name: Prerelease-alpha
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          delete_release: true
+      # - uses: dev-drprasad/delete-tag-and-release@v1.0
+      #   with:
+      #     tag_name: Prerelease-alpha
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     delete_release: true
 
       - name: Tag Repo
         uses: richardsimko/update-tag@v1
